@@ -23,6 +23,7 @@
 </header>
 
 <main class="dashboard">
+
     <section class="panel">
         <div class="heading">
             <span class="step">1</span>
@@ -43,11 +44,11 @@
         </div>
 
         <div class="table-wrap">
-            <table class="process-table">
+            <table>
                 <thead>
                     <tr>
                         <th>Process</th>
-                        <th id="arrival-head">Arrival</th>
+                        <th id="arrival-head" hidden>Arrival</th>
                         <th>Burst</th>
                         <th id="priority-head" hidden>Priority</th>
                         <th></th>
@@ -78,7 +79,6 @@
 
         <p class="hint">
             Priority rule: a smaller number means a higher priority.
-            FCFS and SJF treat all processes as available at time 0.
         </p>
     </section>
 
@@ -140,7 +140,7 @@
                     <thead>
                         <tr>
                             <th>Process</th>
-                            <th id="details-arrival-head">Arrival</th>
+                            <th id="details-arrival-head" hidden>Arrival</th>
                             <th>Burst</th>
                             <th>Completion</th>
                             <th>Turnaround</th>
