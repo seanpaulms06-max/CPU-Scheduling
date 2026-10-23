@@ -1,4 +1,6 @@
 
+"use strict";
+
 // ============================================
 // CPU SCHEDULING CALCULATOR
 // FCFS, SJF, SRTF, Priority, and Round Robin
@@ -27,7 +29,8 @@ const ganttChart = document.getElementById("gantt-chart");
 const ganttTicks = document.getElementById("gantt-ticks");
 const tubes = document.getElementById("tubes");
 const detailsBody = document.getElementById("details-body");
-const detailsArrivalHead = document.getElementById("details-arrival-head");
+const detailsArrivalHead =
+    document.getElementById("details-arrival-head");
 const averages = document.getElementById("averages");
 
 const playButton = document.getElementById("play");
@@ -65,9 +68,9 @@ let lastFrame = null;
 function usesArrivalTime() {
     const algorithm = algorithmSelect.value;
 
-    // FCFS and SJF assume all processes are available at time 0.
-    // Round Robin also assumes every process arrives at time 0.
-    return algorithm === "srtf" || algorithm === "priority";
+    // Only SRTF displays and uses user-entered arrival times.
+    // All other algorithms assume every process arrives at time 0.
+    return algorithm === "srtf";
 }
 
 
@@ -182,7 +185,7 @@ function updateAlgorithm() {
     // Priority inputs are only needed for Priority Scheduling.
     priorityHead.hidden = !isPriority;
 
-    // Arrival Time appears only for SRTF and Priority Scheduling.
+    // Arrival Time appears only for SRTF.
     arrivalHead.hidden = !showArrival;
 
     processBody.querySelectorAll(".arrival-cell").forEach(cell => {
@@ -193,7 +196,7 @@ function updateAlgorithm() {
         cell.hidden = !isPriority;
     });
 
-    // Apply the same rule to the results table.
+    // Apply the same Arrival visibility rule to the results table.
     detailsArrivalHead.hidden = !showArrival;
 
     detailsBody.querySelectorAll(".arrival-result").forEach(cell => {
@@ -213,11 +216,11 @@ function readProcesses() {
         return {
             id: row.dataset.id,
 
-            // FCFS, SJF, and RR use arrival time 0 automatically.
-            // SRTF and Priority read the arrival time entered by the user.
-            arrival: ["fcfs", "sjf", "rr"].includes(algorithm)
-                ? 0
-                : arrivalInput.value.trim(),
+            // Only SRTF uses the arrival value entered by the user.
+            // Other algorithms treat all processes as arriving at time 0.
+            arrival: algorithm === "srtf"
+                ? arrivalInput.value.trim()
+                : 0,
 
             burst: row.querySelector(".burst").value.trim(),
             priority: row.querySelector(".priority").value.trim()
@@ -244,22 +247,30 @@ function validateInputs(rows) {
 
         if (
             usesArrivalTime() &&
-            (p.arrival === "" ||
-             !Number.isFinite(Number(p.arrival)) ||
-             Number(p.arrival) < 0)
+            (
+                p.arrival === "" ||
+                !Number.isFinite(Number(p.arrival)) ||
+                Number(p.arrival) < 0
+            )
         ) {
             alert(`${p.id}: Arrival Time must be 0 or greater.`);
             return false;
         }
 
-        if (!Number.isFinite(Number(p.burst)) || Number(p.burst) <= 0) {
+        if (
+            !Number.isFinite(Number(p.burst)) ||
+            Number(p.burst) <= 0
+        ) {
             alert(`${p.id}: Burst Time must be greater than 0.`);
             return false;
         }
 
         if (
             algorithm === "priority" &&
-            (p.priority === "" || !Number.isInteger(Number(p.priority)))
+            (
+                p.priority === "" ||
+                !Number.isInteger(Number(p.priority))
+            )
         ) {
             alert(`${p.id}: Priority must be a whole number.`);
             return false;
@@ -324,7 +335,7 @@ function scheduleFCFS(ps) {
     const list = [];
     let time = 0;
 
-    // All processes have arrival time 0, so use their table order.
+    // All processes arrive at time 0, so use their table order.
     const ordered = [...ps].sort(
         (a, b) => Number(a.id.slice(1)) - Number(b.id.slice(1))
     );
@@ -386,7 +397,9 @@ function schedulePriority(ps) {
 
         if (ready.length === 0) {
             const next = Math.min(
-                ...ps.filter(p => p.completion === null).map(p => p.arrival)
+                ...ps
+                    .filter(p => p.completion === null)
+                    .map(p => p.arrival)
             );
 
             addSegment(list, "Idle", time, next);
@@ -460,7 +473,10 @@ function scheduleSRTF(ps) {
             Infinity
         );
 
-        const runFor = Math.min(p.remaining, nextArrival - time);
+        const runFor = Math.min(
+            p.remaining,
+            nextArrival - time
+        );
 
         addSegment(list, p.id, time, time + runFor);
 
@@ -542,7 +558,10 @@ function calculateSchedule() {
     } else if (algorithm === "priority") {
         schedule = schedulePriority(processData);
     } else {
-        schedule = scheduleRR(processData, Number(quantumInput.value));
+        schedule = scheduleRR(
+            processData,
+            Number(quantumInput.value)
+        );
     }
 
     // Calculate turnaround, waiting, and response times.
@@ -676,6 +695,7 @@ function updateAnimation(time) {
     simTime = Math.max(0, Math.min(time, end));
 
     const progress = {};
+
     processData.forEach(p => {
         progress[p.id] = 0;
     });
@@ -837,7 +857,8 @@ function renderDetails() {
     });
 
     const average = key =>
-        processData.reduce((sum, p) => sum + p[key], 0) / processData.length;
+        processData.reduce((sum, p) => sum + p[key], 0) /
+        processData.length;
 
     averages.innerHTML = `
         <span>
