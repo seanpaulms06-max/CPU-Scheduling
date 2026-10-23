@@ -1,0 +1,514 @@
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #050b1b;
+    --panel: #07142a;
+    --card: #06142b;
+    --line: #1c477e;
+    --text: #eaf2ff;
+    --muted: #9bb2d5;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(ellipse at top right, #101b45, #050b1b 60%);
+    color: var(--text);
+    font-family: "Exo 2", sans-serif;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 22px 3%;
+    border-bottom: 1px solid #173765;
+    background: #08122bdd;
+}
+
+.logo {
+    color: #2faaff;
+    font-size: 45px;
+    text-shadow: 0 0 20px #287cff;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(22px, 2.2vw, 34px);
+}
+
+.topbar p {
+    margin: 5px 0 0;
+    color: var(--muted);
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: minmax(320px, 0.85fr) minmax(0, 1.8fr);
+    gap: 18px;
+    padding: 20px 2%;
+    align-items: start;
+}
+
+.panel {
+    min-width: 0;
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 15px;
+    background: #051127e8;
+    box-shadow: 0 12px 35px #0003;
+}
+
+.heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.heading h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.step {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #19396c;
+    border: 1px solid #3263ae;
+}
+
+.section-gap {
+    margin-top: 28px;
+}
+
+.control {
+    width: 100%;
+    padding: 12px;
+    color: white;
+    background: #06142c;
+    border: 1px solid #25528a;
+    border-radius: 9px;
+    font: inherit;
+}
+
+.control:focus {
+    outline: 1px solid #6c63ff;
+}
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #214a7b;
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 10px 7px;
+    border-bottom: 1px solid #1a3b64;
+    text-align: center;
+    font-size: 13px;
+}
+
+th {
+    color: #a9c1e5;
+    background: #0a1d3a;
+    font-weight: 500;
+}
+
+.process-name {
+    white-space: nowrap;
+    font-weight: 700;
+}
+
+.process-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    margin-right: 5px;
+    border-radius: 50%;
+}
+
+.process-table input,
+td input {
+    width: 100%;
+    min-width: 45px;
+    padding: 9px 6px;
+    color: white;
+    background: #06142c;
+    border: 1px solid #204c80;
+    border-radius: 7px;
+    font: inherit;
+}
+
+.remove-process {
+    color: #a7bbd8;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.outline-button,
+.primary-button,
+.playback button {
+    padding: 11px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font: inherit;
+}
+
+.outline-button {
+    color: #c9dcff;
+    border: 1px solid #3c68c7;
+    background: #081a38;
+}
+
+.outline-button:hover {
+    background: #112c59;
+}
+
+.add-button {
+    margin-top: 15px;
+}
+
+.quantum-area {
+    margin-top: 25px;
+}
+
+.quantum-area label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.button-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.primary-button {
+    flex: 1;
+    color: white;
+    border: none;
+    background: linear-gradient(105deg, #238dff, #8b39ed);
+    font-weight: 700;
+}
+
+.primary-button:hover {
+    filter: brightness(1.15);
+}
+
+.hint {
+    color: #718caf;
+    font-size: 12px;
+    margin-top: 15px;
+    line-height: 1.6;
+}
+
+.results-icon {
+    color: #388dff;
+    font-size: 30px;
+}
+
+.results-panel > .heading h2 {
+    color: #9bc2ff;
+    font-size: 26px;
+}
+
+.empty-state {
+    padding: 22px;
+    border: 1px dashed #28507d;
+    border-radius: 10px;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.result-card {
+    min-width: 0;
+    padding: 16px;
+    margin-bottom: 14px;
+    border: 1px solid #1d4778;
+    border-radius: 12px;
+    background: #06142b;
+}
+
+.card-heading {
+    margin-bottom: 15px;
+}
+
+.card-heading h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.card-heading p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* NORMAL GANTT CHART */
+
+.gantt-chart {
+    display: flex;
+    min-height: 44px;
+    overflow: hidden;
+    border: 5px solid #122747;
+    border-radius: 9px;
+    background: #0a1a32;
+}
+
+.gantt-segment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2px;
+    flex: 1 1 0;
+    overflow: hidden;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    border-right: 1px solid #ffffff40;
+}
+
+.gantt-segment.idle {
+    background: repeating-linear-gradient(
+        135deg,
+        #25334b,
+        #25334b 8px,
+        #17243a 8px,
+        #17243a 16px
+    );
+    color: #a5b5cb;
+}
+
+.gantt-ticks {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding-top: 8px;
+    color: #a8bddc;
+    font-size: 11px;
+}
+
+/* VERTICAL LIQUID TUBES */
+
+.tubes {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 12px 8px 8px;
+}
+
+.tube-item {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 60px;
+}
+
+.tube-label {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.tube {
+    position: relative;
+    width: 48px;
+    height: 145px;
+    overflow: hidden;
+    border: 1px solid #375a8b;
+    border-radius: 28px;
+    background: linear-gradient(180deg, #0a1c37, #09142a);
+    box-shadow: inset 0 0 12px #0008;
+}
+
+.tube-fill {
+    position: absolute;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+    height: 0%;
+    overflow: hidden;
+    border-radius: 22px;
+    transition: height 0.08s linear;
+}
+
+.tube-fill::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: -10%;
+    width: 120%;
+    height: 11px;
+    border-radius: 50%;
+    background: #ffffff70;
+    filter: blur(2px);
+    animation: wave 2s ease-in-out infinite alternate;
+}
+
+@keyframes wave {
+    from {
+        transform: translateX(-6px) rotate(-3deg);
+    }
+
+    to {
+        transform: translateX(6px) rotate(3deg);
+    }
+}
+
+.tube-percent {
+    color: #b9d5ff;
+    font-size: 12px;
+    text-align: center;
+}
+
+.tube-percent strong {
+    display: block;
+    margin-bottom: 2px;
+    color: white;
+    font-size: 13px;
+}
+
+.playback {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 13px;
+    border-top: 1px solid #18375e;
+}
+
+.playback button {
+    padding: 8px 12px;
+    color: #cde0ff;
+    background: #0b2041;
+    border: 1px solid #2b5488;
+    font-size: 13px;
+}
+
+.playback button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.playback label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.playback select {
+    padding: 6px;
+    color: white;
+    background: #091b36;
+    border: 1px solid #2b5488;
+    border-radius: 7px;
+}
+
+#clock {
+    color: #a9c6ef;
+    font-size: 13px;
+}
+
+/* RESULTS TABLE */
+
+.details-table {
+    min-width: 650px;
+}
+
+.details-table th,
+.details-table td {
+    padding: 9px 7px;
+    border: 1px solid #193a62;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+/* AVERAGE RESULTS */
+
+.averages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding-top: 14px;
+    color: #aac9f4;
+    font-size: 13px;
+}
+
+.averages strong {
+    color: white;
+}
+
+/* HIDE ELEMENTS SELECTED BY JAVASCRIPT */
+
+[hidden] {
+    display: none !important;
+}
+
+/* RESPONSIVE LAYOUT */
+
+@media (max-width: 950px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 540px) {
+    .topbar {
+        padding: 18px 5%;
+        gap: 12px;
+    }
+
+    .logo {
+        font-size: 34px;
+    }
+
+    .topbar p {
+        font-size: 13px;
+    }
+
+    .dashboard {
+        padding: 12px;
+    }
+
+    .panel {
+        padding: 14px;
+    }
+
+    .tube {
+        width: 40px;
+        height: 120px;
+    }
+
+    .tubes {
+        gap: 8px;
+    }
+
+    .button-row > button {
+        padding: 10px;
+    }
+}
