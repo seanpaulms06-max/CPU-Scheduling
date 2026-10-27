@@ -1,4 +1,8 @@
 
+/* ============================================
+   1. GLOBAL SETTINGS AND COLORS
+============================================ */
+
 * {
     box-sizing: border-box;
 }
@@ -10,15 +14,59 @@
     --line: #1c477e;
     --text: #eaf2ff;
     --muted: #9bb2d5;
+    --blue: #238dff;
+    --purple: #a052ff;
+    --cyan: #5ee7ff;
+}
+
+html {
+    min-width: 320px;
+    scroll-behavior: smooth;
 }
 
 body {
     margin: 0;
     min-height: 100vh;
-    background: radial-gradient(ellipse at top right, #101b45, #050b1b 60%);
+    background:
+        radial-gradient(ellipse at top right, #101b45, transparent 55%),
+        radial-gradient(ellipse at bottom left, #10132e, transparent 50%),
+        var(--bg);
     color: var(--text);
     font-family: "Exo 2", sans-serif;
 }
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ============================================
+   2. TOP HEADER
+============================================ */
 
 .topbar {
     display: flex;
@@ -30,20 +78,34 @@ body {
 }
 
 .logo {
+    flex-shrink: 0;
     color: #2faaff;
     font-size: 45px;
-    text-shadow: 0 0 20px #287cff;
+    line-height: 1;
+    text-shadow:
+        0 0 12px #287cff,
+        0 0 25px #287cff70;
+}
+
+.topbar-content {
+    min-width: 0;
 }
 
 h1 {
     margin: 0;
     font-size: clamp(22px, 2.2vw, 34px);
+    font-weight: 800;
+    letter-spacing: .2px;
 }
 
 .topbar p {
     margin: 5px 0 0;
     color: var(--muted);
 }
+
+/* ============================================
+   3. DASHBOARD AND PANELS
+============================================ */
 
 .dashboard {
     display: grid;
@@ -75,32 +137,75 @@ h1 {
 }
 
 .step {
-    width: 34px;
-    height: 34px;
     display: grid;
+    flex-shrink: 0;
     place-items: center;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     background: #19396c;
     border: 1px solid #3263ae;
+    color: #fff;
+    font-size: 18px;
 }
 
 .section-gap {
     margin-top: 28px;
 }
 
+/* ============================================
+   4. INPUTS
+============================================ */
+
 .control {
     width: 100%;
     padding: 12px;
-    color: white;
+    color: #fff;
     background: #06142c;
     border: 1px solid #25528a;
     border-radius: 9px;
-    font: inherit;
 }
 
 .control:focus {
-    outline: 1px solid #6c63ff;
+    border-color: #6c63ff;
 }
+
+select.control {
+    cursor: pointer;
+}
+
+input[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+}
+
+.process-table input,
+td input {
+    width: 100%;
+    min-width: 45px;
+    padding: 9px 6px;
+    color: #fff;
+    background: #06142c;
+    border: 1px solid #204c80;
+    border-radius: 7px;
+}
+
+.process-table input:focus,
+td input:focus {
+    border-color: var(--blue);
+    outline: none;
+    box-shadow: 0 0 0 2px #238dff25;
+}
+
+/* ============================================
+   5. TABLES AND PROCESS INPUT ROWS
+============================================ */
 
 .table-wrap {
     width: 100%;
@@ -114,7 +219,8 @@ table {
     border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
     padding: 10px 7px;
     border-bottom: 1px solid #1a3b64;
     text-align: center;
@@ -125,6 +231,14 @@ th {
     color: #a9c1e5;
     background: #0a1d3a;
     font-weight: 500;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.process-table {
+    min-width: 240px;
 }
 
 .process-name {
@@ -138,27 +252,30 @@ th {
     height: 9px;
     margin-right: 5px;
     border-radius: 50%;
-}
-
-.process-table input,
-td input {
-    width: 100%;
-    min-width: 45px;
-    padding: 9px 6px;
-    color: white;
-    background: #06142c;
-    border: 1px solid #204c80;
-    border-radius: 7px;
-    font: inherit;
+    vertical-align: middle;
+    box-shadow: 0 0 8px currentColor;
 }
 
 .remove-process {
-    color: #a7bbd8;
+    width: 30px;
+    height: 30px;
+    color: #a7c9f7;
     background: transparent;
     border: none;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 22px;
+    line-height: 1;
 }
+
+.remove-process:hover {
+    color: #ff7197;
+    background: #ff71971a;
+}
+
+/* ============================================
+   6. BUTTONS AND QUANTUM INPUT
+============================================ */
 
 .outline-button,
 .primary-button,
@@ -166,7 +283,11 @@ td input {
     padding: 11px 16px;
     border-radius: 10px;
     cursor: pointer;
-    font: inherit;
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        filter .2s ease,
+        transform .2s ease;
 }
 
 .outline-button {
@@ -177,10 +298,30 @@ td input {
 
 .outline-button:hover {
     background: #112c59;
+    border-color: #6193ff;
 }
 
 .add-button {
     margin-top: 15px;
+}
+
+.button-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.primary-button {
+    flex: 1;
+    color: #fff;
+    border: none;
+    background: linear-gradient(105deg, #238dff, #8b39ed);
+    font-weight: 800;
+}
+
+.primary-button:hover {
+    filter: brightness(1.15);
+    transform: translateY(-1px);
 }
 
 .quantum-area {
@@ -193,29 +334,21 @@ td input {
     font-weight: 600;
 }
 
-.button-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 25px;
-}
-
-.primary-button {
-    flex: 1;
-    color: white;
-    border: none;
-    background: linear-gradient(105deg, #238dff, #8b39ed);
-    font-weight: 700;
-}
-
-.primary-button:hover {
-    filter: brightness(1.15);
-}
-
 .hint {
-    color: #718caf;
-    font-size: 12px;
     margin-top: 15px;
+    color: #86a9d9;
+    font-size: 12px;
+    line-height: 1.5;
 }
+
+.secondary-hint {
+    margin-top: 8px;
+    color: #708caf;
+}
+
+/* ============================================
+   7. RESULTS PANEL AND CARDS
+============================================ */
 
 .results-icon {
     color: #388dff;
@@ -237,11 +370,15 @@ td input {
 
 .result-card {
     min-width: 0;
-    padding: 16px;
     margin-bottom: 14px;
+    padding: 16px;
     border: 1px solid #1d4778;
     border-radius: 12px;
     background: #06142b;
+}
+
+.result-card:last-child {
+    margin-bottom: 0;
 }
 
 .card-heading {
@@ -257,31 +394,50 @@ td input {
     margin: 4px 0 0;
     color: var(--muted);
     font-size: 13px;
+    line-height: 1.5;
 }
 
-/* GANTT CHART */
+/* ============================================
+   8. GANTT CHART
+   Segment widths are proportional to execution time.
+============================================ */
 
 .gantt-chart {
     display: flex;
-    min-height: 44px;
+    width: 100%;
+    min-width: 0;
+    min-height: 54px;
     overflow: hidden;
     border: 5px solid #122747;
-    border-radius: 9px;
+    border-radius: 10px;
     background: #0a1a32;
+    isolation: isolate;
 }
 
 .gantt-segment {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 2px;
-    flex: 1 1 0;
+
+    /*
+       JavaScript sets --duration to each segment's
+       execution time. The flex basis remains zero,
+       allowing the duration to control its width.
+    */
+    flex: var(--duration, 1) 1 0%;
+    min-width: 0;
+
     overflow: hidden;
-    color: white;
+    color: #fff;
     font-size: 12px;
     font-weight: 700;
     white-space: nowrap;
-    border-right: 1px solid #ffffff40;
+    border-right: 1px solid #ffffff55;
+}
+
+.gantt-segment:last-child {
+    border-right: none;
 }
 
 .gantt-segment.idle {
@@ -292,109 +448,288 @@ td input {
         #17243a 8px,
         #17243a 16px
     );
-    color: #a5b5cb;
+    color: #c2d0e5;
 }
 
-/* PROCESS TUBES */
+/* ============================================
+   9. GANTT TIMELINE LABELS
+   Labels share the chart's inner width and boundaries.
+============================================ */
+
+.gantt-ticks {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    margin: 0;
+    padding: 0;
+    color: #b8cbe8;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+}
+
+.gantt-ticks span {
+    position: absolute;
+    top: 9px;
+    display: block;
+    white-space: nowrap;
+    line-height: 1;
+    transform: translateX(-50%);
+}
+
+.gantt-ticks .tick-start {
+    transform: translateX(0);
+}
+
+.gantt-ticks .tick-middle {
+    transform: translateX(-50%);
+}
+
+.gantt-ticks .tick-end {
+    transform: translateX(-100%);
+}
+
+/* ============================================
+   10. PROCESS ANIMATION LAYOUT
+============================================ */
 
 .tubes {
     display: flex;
-    justify-content: space-around;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 18px;
-    padding: 12px 8px 8px;
+    flex-direction: column;
+    gap: 24px;
+    padding: 12px 4px 16px;
 }
 
 .tube-item {
     display: flex;
-    flex: 1;
     flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    min-width: 60px;
+    gap: 9px;
+    min-width: 0;
 }
 
 .tube-label {
+    color: #e5efff;
     font-size: 14px;
     font-weight: 700;
 }
 
-.tube {
+.cannon-bar {
     position: relative;
-    width: 48px;
-    height: 145px;
-    overflow: hidden;
-    border: 1px solid #375a8b;
-    border-radius: 28px;
-    background: linear-gradient(180deg, #0a1c37, #09142a);
-    box-shadow: inset 0 0 12px #0008;
+    display: flex;
+    align-items: center;
+    height: 48px;
+    min-width: 0;
+    padding: 0 3px;
 }
 
-.tube-fill {
-    position: absolute;
-    left: 3px;
-    right: 3px;
-    bottom: 3px;
-    height: 0%;
+/* Empty process track. */
+
+.process-bar {
+    position: relative;
+    width: 100%;
+    height: 18px;
     overflow: hidden;
-    border-radius: 22px;
-    transition: height .08s linear;
+    border: 1px solid #29558a;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #071329, #0b1b36);
+    box-shadow:
+        inset 0 0 9px #0009,
+        0 0 8px #0a4bff20;
 }
 
-.tube-fill::before {
+/* The fill represents the amount of CPU time completed. */
+
+.process-fill {
+    position: relative;
+    width: 0%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: inherit;
+    transition: width .04s linear;
+    box-shadow: 0 0 12px #238dff80;
+}
+
+.process-fill::after {
     content: "";
     position: absolute;
-    top: -5px;
-    left: -10%;
-    width: 120%;
-    height: 11px;
-    border-radius: 50%;
+    top: 0;
+    right: 0;
+    width: 18px;
+    height: 100%;
     background: #ffffff70;
-    filter: blur(2px);
-    animation: wave 2s ease-in-out infinite alternate;
+    filter: blur(5px);
 }
 
-@keyframes wave {
-    from {
-        transform: translateX(-6px) rotate(-3deg);
+/* ============================================
+   11. MOVING NEON CANNON
+============================================ */
+
+.cannon {
+    position: absolute;
+    top: 6px;
+    left: 3px;
+    width: 36px;
+    height: 36px;
+    z-index: 5;
+    pointer-events: none;
+    transition: left .04s linear;
+}
+
+.cannon-body {
+    position: absolute;
+    top: 12px;
+    left: 4px;
+    width: 24px;
+    height: 12px;
+    border: 1px solid #91e9ff;
+    border-radius: 5px;
+    background: linear-gradient(90deg, #47c7ff, #8a5cff);
+    box-shadow:
+        0 0 7px #47c7ff,
+        0 0 15px #47c7ff90;
+}
+
+.cannon-body::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    width: 10px;
+    height: 4px;
+    border-radius: 3px;
+    background: #e5fcff;
+}
+
+.cannon-body::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    right: -8px;
+    width: 9px;
+    height: 8px;
+    border-radius: 0 4px 4px 0;
+    background: #b86cff;
+    box-shadow: 0 0 8px #a052ff;
+}
+
+.cannon-glow {
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: #4dc9ff40;
+    filter: blur(7px);
+}
+
+/* ============================================
+   12. FIRING PARTICLES
+   These particles are CSS-drawn, not imported images.
+============================================ */
+
+.cannon-particles {
+    position: absolute;
+    top: 15px;
+    left: 27px;
+    width: 50px;
+    height: 15px;
+    overflow: visible;
+    opacity: 0;
+}
+
+.cannon.firing .cannon-particles {
+    opacity: 1;
+}
+
+.particle {
+    position: absolute;
+    top: 3px;
+    left: 0;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #6fe6ff;
+    box-shadow:
+        0 0 5px #6fe6ff,
+        0 0 12px #6fe6ff;
+    animation: particle-shot .38s linear infinite;
+}
+
+.particle:nth-child(2) {
+    top: -2px;
+    width: 4px;
+    height: 4px;
+    background: #b36dff;
+    box-shadow: 0 0 8px #b36dff;
+    animation-delay: -.12s;
+}
+
+.particle:nth-child(3) {
+    top: 8px;
+    width: 3px;
+    height: 3px;
+    animation-delay: -.24s;
+}
+
+@keyframes particle-shot {
+    0% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
     }
-    to {
-        transform: translateX(6px) rotate(3deg);
+
+    100% {
+        transform: translateX(34px) scale(.25);
+        opacity: 0;
     }
 }
+
+/* ============================================
+   13. PROCESS PROGRESS LABELS
+============================================ */
 
 .tube-percent {
-    color: #b9d5ff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #a9c9f5;
     font-size: 12px;
-    text-align: center;
+    font-variant-numeric: tabular-nums;
 }
 
 .tube-percent strong {
-    display: block;
-    margin-bottom: 2px;
-    color: white;
+    min-width: 40px;
+    color: #fff;
     font-size: 13px;
 }
 
-/* ANIMATION CONTROLS */
+/* ============================================
+   14. ANIMATION PLAYBACK CONTROLS
+============================================ */
 
 .playback {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 12px;
     margin-top: 12px;
-    padding-top: 13px;
+    padding-top: 15px;
     border-top: 1px solid #18375e;
 }
 
+.playback-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
 .playback button {
-    padding: 8px 12px;
+    padding: 9px 12px;
     color: #cde0ff;
     background: #0b2041;
     border: 1px solid #2b5488;
     font-size: 13px;
+}
+
+.playback button:hover:not(:disabled) {
+    background: #153566;
+    border-color: #5795ff;
 }
 
 .playback button:disabled {
@@ -402,29 +737,38 @@ td input {
     cursor: not-allowed;
 }
 
-.playback label {
+.speed-control {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
     margin-left: auto;
     color: var(--muted);
     font-size: 13px;
 }
 
 .playback select {
-    padding: 6px;
-    color: white;
+    padding: 7px 9px;
+    color: #fff;
     background: #091b36;
     border: 1px solid #2b5488;
     border-radius: 7px;
+    cursor: pointer;
 }
 
 #clock {
     color: #a9c6ef;
     font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
 }
 
-/* RESULTS TABLE */
+/* ============================================
+   15. SCHEDULING DETAILS TABLE
+============================================ */
+
+.details-wrap {
+    max-width: 100%;
+}
 
 .details-table {
     min-width: 650px;
@@ -432,50 +776,52 @@ td input {
 
 .details-table th,
 .details-table td {
-    padding: 9px 7px;
+    padding: 10px 8px;
     border: 1px solid #193a62;
     white-space: nowrap;
     font-size: 12px;
 }
 
-.gantt-ticks {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    padding-top: 8px;
-    color: #a8bddc;
-    font-size: 11px;
+.details-table th {
+    background: #0a1d3a;
+}
+
+.details-table td {
+    color: #dbe8ff;
 }
 
 .averages {
     display: flex;
     flex-wrap: wrap;
-    gap: 18px;
-    padding-top: 14px;
+    gap: 12px 22px;
+    padding-top: 16px;
     color: #aac9f4;
     font-size: 13px;
+    line-height: 1.6;
 }
 
 .averages strong {
-    color: white;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
 }
 
-/* HIDE ELEMENTS CONTROLLED BY JAVASCRIPT */
-
-[hidden] {
-    display: none !important;
-}
-
-/* RESPONSIVE LAYOUT */
+/* ============================================
+   16. RESPONSIVE LAYOUT
+============================================ */
 
 @media (max-width: 950px) {
     .dashboard {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .results-panel {
+        min-width: 0;
     }
 }
 
 @media (max-width: 540px) {
     .topbar {
+        align-items: flex-start;
         padding: 18px 5%;
         gap: 12px;
     }
@@ -486,22 +832,84 @@ td input {
 
     .topbar p {
         font-size: 13px;
+        line-height: 1.5;
     }
 
     .dashboard {
         padding: 12px;
+        gap: 12px;
     }
 
     .panel {
         padding: 14px;
+        border-radius: 12px;
     }
 
-    .tube {
-        width: 40px;
-        height: 120px;
+    .heading h2 {
+        font-size: 18px;
+    }
+
+    .step {
+        width: 36px;
+        height: 36px;
+    }
+
+    .button-row {
+        flex-wrap: wrap;
+    }
+
+    .primary-button {
+        min-height: 45px;
+    }
+
+    .result-card {
+        padding: 12px;
+    }
+
+    .gantt-chart {
+        min-height: 46px;
+        border-width: 4px;
+    }
+
+    .gantt-ticks {
+        font-size: 10px;
     }
 
     .tubes {
-        gap: 8px;
+        gap: 20px;
+    }
+
+    .playback {
+        align-items: flex-start;
+    }
+
+    .playback-buttons {
+        width: 100%;
+    }
+
+    .speed-control {
+        margin-left: 0;
+    }
+
+    #clock {
+        align-self: center;
+    }
+
+    .averages {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+/* Respect reduced-motion preferences. */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
     }
 }
