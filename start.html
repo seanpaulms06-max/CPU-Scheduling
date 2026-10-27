@@ -4,19 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050b1b">
+
     <title>CPU Scheduling Calculator</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700&family=Michroma&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="calculator.css">
+    <script src="calculator.js" defer></script>
 </head>
 <body>
 
 <header class="topbar">
-    <div class="logo">▦</div>
-    <div>
+    <div class="logo" aria-hidden="true">▦</div>
+    <div class="topbar-content">
         <h1>CPU Scheduling Calculator</h1>
         <p>Simulate and visualize CPU scheduling algorithms.</p>
     </div>
@@ -24,12 +27,15 @@
 
 <main class="dashboard">
 
-    <section class="panel">
+    <!-- INPUT PANEL -->
+    <section class="panel input-panel">
+
         <div class="heading">
             <span class="step">1</span>
             <h2>Select Algorithm</h2>
         </div>
 
+        <label class="visually-hidden" for="algorithm">Scheduling algorithm</label>
         <select id="algorithm" class="control">
             <option value="fcfs">First Come, First Served (FCFS)</option>
             <option value="sjf">Shortest Job First (SJF)</option>
@@ -44,14 +50,14 @@
         </div>
 
         <div class="table-wrap">
-            <table>
+            <table class="process-table">
                 <thead>
                     <tr>
                         <th>Process</th>
                         <th id="arrival-head" hidden>Arrival</th>
                         <th>Burst</th>
                         <th id="priority-head" hidden>Priority</th>
-                        <th></th>
+                        <th aria-label="Actions"></th>
                     </tr>
                 </thead>
                 <tbody id="process-body"></tbody>
@@ -64,8 +70,13 @@
 
         <div id="quantum-area" class="quantum-area" hidden>
             <label for="quantum">Time Quantum (RR)</label>
-            <input type="number" id="quantum" class="control"
-                   min="0.01" step="any" value="2">
+            <input
+                type="number"
+                id="quantum"
+                class="control"
+                min="0.01"
+                step="any"
+                value="2">
         </div>
 
         <div class="button-row">
@@ -80,42 +91,65 @@
         <p class="hint">
             Priority rule: a smaller number means a higher priority.
         </p>
+        <p class="hint secondary-hint">
+            Arrival Time is used only for SRTF. Other algorithms assume all processes arrive at time 0.
+        </p>
+
     </section>
 
+    <!-- RESULTS PANEL -->
     <section class="panel results-panel">
+
         <div class="heading">
-            <span class="results-icon">▥</span>
+            <span class="results-icon" aria-hidden="true">▥</span>
             <h2>Results</h2>
         </div>
 
         <div id="empty-state" class="empty-state">
             Enter your process details, select an algorithm, and click
-            Calculate to see the results.
+            <strong>Calculate</strong> to see the results.
         </div>
 
+        <!-- GANTT CHART -->
         <section id="gantt-section" class="result-card" hidden>
             <div class="card-heading">
                 <h3>Gantt Chart</h3>
                 <p>Shows the order of CPU execution.</p>
             </div>
-            <div id="gantt-chart" class="gantt-chart"></div>
-            <div id="gantt-ticks" class="gantt-ticks"></div>
+
+            <div
+                id="gantt-chart"
+                class="gantt-chart"
+                aria-label="CPU execution timeline">
+            </div>
+
+            <div
+                id="gantt-ticks"
+                class="gantt-ticks"
+                aria-label="Gantt chart time markers">
+            </div>
         </section>
 
+        <!-- PROCESS ANIMATION -->
         <section id="animation-section" class="result-card" hidden>
             <div class="card-heading">
                 <h3>Process Animation</h3>
-                <p>Each tube fills as its process receives CPU time.</p>
+                <p>
+                    Watch the cannon fire neon particles as each process
+                    receives CPU time.
+                </p>
             </div>
 
             <div id="tubes" class="tubes"></div>
 
             <div class="playback">
-                <button type="button" id="play">▶ Play</button>
-                <button type="button" id="pause" disabled>Ⅱ Pause</button>
-                <button type="button" id="restart">↻ Restart</button>
+                <div class="playback-buttons">
+                    <button type="button" id="play">▶ Play</button>
+                    <button type="button" id="pause" disabled>Ⅱ Pause</button>
+                    <button type="button" id="restart">↻ Restart</button>
+                </div>
 
-                <label>
+                <label class="speed-control" for="speed">
                     Speed
                     <select id="speed">
                         <option value="2000">0.5×</option>
@@ -125,17 +159,18 @@
                     </select>
                 </label>
 
-                <span id="clock">Time: 0</span>
+                <span id="clock" aria-live="polite">Time: 0</span>
             </div>
         </section>
 
+        <!-- SCHEDULING DETAILS -->
         <section id="details-section" class="result-card" hidden>
             <div class="card-heading">
                 <h3>Scheduling Details</h3>
                 <p>Calculated times for every process.</p>
             </div>
 
-            <div class="table-wrap">
+            <div class="table-wrap details-wrap">
                 <table class="details-table">
                     <thead>
                         <tr>
@@ -154,9 +189,9 @@
 
             <div id="averages" class="averages"></div>
         </section>
+
     </section>
 </main>
 
-<script src="calculator.js"></script>
 </body>
 </html>
