@@ -64,6 +64,7 @@ select:focus-visible {
     border: 0;
 }
 
+
 /* ============================================
    2. TOP HEADER
 ============================================ */
@@ -102,6 +103,7 @@ h1 {
     margin: 5px 0 0;
     color: var(--muted);
 }
+
 
 /* ============================================
    3. DASHBOARD AND PANELS
@@ -153,6 +155,7 @@ h1 {
     margin-top: 28px;
 }
 
+
 /* ============================================
    4. INPUTS
 ============================================ */
@@ -202,6 +205,7 @@ td input:focus {
     outline: none;
     box-shadow: 0 0 0 2px #238dff25;
 }
+
 
 /* ============================================
    5. TABLES AND PROCESS INPUT ROWS
@@ -272,6 +276,7 @@ tbody tr:last-child td {
     color: #ff7197;
     background: #ff71971a;
 }
+
 
 /* ============================================
    6. BUTTONS AND QUANTUM INPUT
@@ -346,6 +351,7 @@ tbody tr:last-child td {
     color: #708caf;
 }
 
+
 /* ============================================
    7. RESULTS PANEL AND CARDS
 ============================================ */
@@ -397,15 +403,54 @@ tbody tr:last-child td {
     line-height: 1.5;
 }
 
+
+
 /* ============================================
-   8. GANTT CHART
-   Segment widths are proportional to execution time.
+   8. GANTT TIMELINE SCROLL CONTAINER
+   The chart and labels scroll together.
+============================================ */
+
+.gantt-timeline {
+    display: block;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 0 10px;
+    scrollbar-width: thin;
+    scrollbar-color: #3263ae #07142a;
+    overscroll-behavior-x: contain;
+}
+
+.gantt-timeline::-webkit-scrollbar {
+    height: 7px;
+}
+
+.gantt-timeline::-webkit-scrollbar-track {
+    background: #07142a;
+    border-radius: 10px;
+}
+
+.gantt-timeline::-webkit-scrollbar-thumb {
+    background: #3263ae;
+    border-radius: 10px;
+}
+
+.gantt-timeline::-webkit-scrollbar-thumb:hover {
+    background: #5a8eea;
+}
+
+
+/* ============================================
+   9. GANTT CHART BLOCKS
 ============================================ */
 
 .gantt-chart {
     display: flex;
-    width: 100%;
-    min-width: 0;
+    position: relative;
+    width: max-content;
+    min-width: 100%;
     min-height: 54px;
     overflow: hidden;
     border: 5px solid #122747;
@@ -417,17 +462,12 @@ tbody tr:last-child td {
 .gantt-segment {
     position: relative;
     display: flex;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-
-    /*
-       JavaScript sets --duration to each segment's
-       execution time. The flex basis remains zero,
-       allowing the duration to control its width.
-    */
-    flex: var(--duration, 1) 1 0%;
+    box-sizing: border-box;
     min-width: 0;
-
+    min-height: 44px;
     overflow: hidden;
     color: #fff;
     font-size: 12px;
@@ -451,17 +491,23 @@ tbody tr:last-child td {
     color: #c2d0e5;
 }
 
+
 /* ============================================
-   9. GANTT TIMELINE LABELS
-   Labels share the chart's inner width and boundaries.
+   10. GANTT TIME LABELS
+   Labels are positioned by JavaScript using
+   the pixel position of each segment boundary.
 ============================================ */
 
 .gantt-ticks {
+    display: block;
     position: relative;
-    width: 100%;
-    height: 30px;
+    box-sizing: border-box;
+    width: max-content;
+    min-width: 100%;
+    height: 38px;
     margin: 0;
     padding: 0;
+    overflow: visible;
     color: #b8cbe8;
     font-size: 12px;
     font-variant-numeric: tabular-nums;
@@ -473,7 +519,7 @@ tbody tr:last-child td {
     display: block;
     white-space: nowrap;
     line-height: 1;
-    transform: translateX(-50%);
+    z-index: 5;
 }
 
 .gantt-ticks .tick-start {
@@ -489,7 +535,7 @@ tbody tr:last-child td {
 }
 
 /* ============================================
-   10. PROCESS ANIMATION LAYOUT
+   11. PROCESS ANIMATION LAYOUT
 ============================================ */
 
 .tubes {
@@ -521,7 +567,10 @@ tbody tr:last-child td {
     padding: 0 3px;
 }
 
-/* Empty process track. */
+
+/* ============================================
+   12. PROCESS PROGRESS BAR
+============================================ */
 
 .process-bar {
     position: relative;
@@ -535,8 +584,6 @@ tbody tr:last-child td {
         inset 0 0 9px #0009,
         0 0 8px #0a4bff20;
 }
-
-/* The fill represents the amount of CPU time completed. */
 
 .process-fill {
     position: relative;
@@ -559,8 +606,9 @@ tbody tr:last-child td {
     filter: blur(5px);
 }
 
+
 /* ============================================
-   11. MOVING NEON CANNON
+   13. MOVING NEON CANNON
 ============================================ */
 
 .cannon {
@@ -619,9 +667,9 @@ tbody tr:last-child td {
     filter: blur(7px);
 }
 
+
 /* ============================================
-   12. FIRING PARTICLES
-   These particles are CSS-drawn, not imported images.
+   14. FIRING PARTICLES
 ============================================ */
 
 .cannon-particles {
@@ -680,8 +728,9 @@ tbody tr:last-child td {
     }
 }
 
+
 /* ============================================
-   13. PROCESS PROGRESS LABELS
+   15. PROCESS PROGRESS LABELS
 ============================================ */
 
 .tube-percent {
@@ -699,8 +748,9 @@ tbody tr:last-child td {
     font-size: 13px;
 }
 
+
 /* ============================================
-   14. ANIMATION PLAYBACK CONTROLS
+   16. ANIMATION PLAYBACK CONTROLS
 ============================================ */
 
 .playback {
@@ -762,8 +812,9 @@ tbody tr:last-child td {
     white-space: nowrap;
 }
 
+
 /* ============================================
-   15. SCHEDULING DETAILS TABLE
+   17. SCHEDULING DETAILS TABLE
 ============================================ */
 
 .details-wrap {
@@ -805,8 +856,9 @@ tbody tr:last-child td {
     font-variant-numeric: tabular-nums;
 }
 
+
 /* ============================================
-   16. RESPONSIVE LAYOUT
+   18. RESPONSIVE LAYOUT
 ============================================ */
 
 @media (max-width: 950px) {
@@ -871,8 +923,14 @@ tbody tr:last-child td {
         border-width: 4px;
     }
 
+    .gantt-segment {
+        min-height: 38px;
+        font-size: 11px;
+    }
+
     .gantt-ticks {
-        font-size: 10px;
+        height: 36px;
+        font-size: 11px;
     }
 
     .tubes {
@@ -901,7 +959,10 @@ tbody tr:last-child td {
     }
 }
 
-/* Respect reduced-motion preferences. */
+
+/* ============================================
+   19. REDUCED MOTION ACCESSIBILITY
+============================================ */
 
 @media (prefers-reduced-motion: reduce) {
     *,
