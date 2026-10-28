@@ -6,10 +6,7 @@
    FCFS, SJF, SRTF, Priority, and Round Robin
 ============================================ */
 
-
-/* ============================================
-   1. HTML ELEMENTS
-============================================ */
+/* 1. HTML ELEMENTS */
 
 const processBody = document.getElementById("process-body");
 const addButton = document.getElementById("add-process");
@@ -41,20 +38,11 @@ const restartButton = document.getElementById("restart");
 const speedSelect = document.getElementById("speed");
 const clock = document.getElementById("clock");
 
-
-/* ============================================
-   2. COLORS AND SIMULATION STATE
-============================================ */
+/* 2. COLORS AND SIMULATION STATE */
 
 const COLORS = [
-    "#238dff",
-    "#a052ff",
-    "#00c9a7",
-    "#ff922e",
-    "#f04f91",
-    "#e5c93c",
-    "#31c5dc",
-    "#7cc65a"
+    "#238dff", "#a052ff", "#00c9a7", "#ff922e",
+    "#f04f91", "#e5c93c", "#31c5dc", "#7cc65a"
 ];
 
 let processCount = 0;
@@ -66,13 +54,7 @@ let running = false;
 let animationId = null;
 let lastFrame = null;
 
-
-/* ============================================
-   3. HELPER FUNCTIONS
-============================================ */
-
-// Arrival Time is displayed and used only for SRTF.
-// All other algorithms assume every process arrives at time 0.
+/* 3. HELPER FUNCTIONS */
 
 function usesArrivalTime() {
     return algorithmSelect.value === "srtf";
@@ -83,32 +65,23 @@ function processIndex(id) {
 }
 
 function processColor(id) {
-    return COLORS[
-        ((processIndex(id) % COLORS.length) + COLORS.length) %
-        COLORS.length
-    ];
+    const index = processIndex(id);
+    return COLORS[((index % COLORS.length) + COLORS.length) % COLORS.length];
 }
 
 function fmt(number) {
-    const rounded = Number(Number(number).toFixed(2));
-
-    return Number.isInteger(rounded)
-        ? String(rounded)
-        : String(rounded);
+    return String(Number(Number(number).toFixed(2)));
 }
 
-
-/* ============================================
-   4. ADD A PROCESS
-============================================ */
+/* 4. ADD A PROCESS */
 
 function addProcess() {
     processCount++;
 
     const id = `P${processCount}`;
     const color = COLORS[(processCount - 1) % COLORS.length];
-
     const row = document.createElement("tr");
+
     row.dataset.id = id;
 
     row.innerHTML = `
@@ -116,40 +89,20 @@ function addProcess() {
             <span class="process-dot" style="background:${color}"></span>
             ${id}
         </td>
-
         <td class="arrival-cell" hidden>
-            <input
-                type="number"
-                class="arrival"
-                min="0"
-                step="any"
-                value="0"
-                aria-label="${id} arrival time">
+            <input type="number" class="arrival" min="0" step="any"
+                value="0" aria-label="${id} arrival time">
         </td>
-
         <td>
-            <input
-                type="number"
-                class="burst"
-                min="0.01"
-                step="any"
-                value="0"
-                aria-label="${id} burst time">
+            <input type="number" class="burst" min="0.01" step="any"
+                value="0" aria-label="${id} burst time">
         </td>
-
         <td class="priority-cell" hidden>
-            <input
-                type="number"
-                class="priority"
-                step="1"
-                value="1"
-                aria-label="${id} priority">
+            <input type="number" class="priority" step="1"
+                value="1" aria-label="${id} priority">
         </td>
-
         <td>
-            <button
-                type="button"
-                class="remove-process"
+            <button type="button" class="remove-process"
                 aria-label="Remove ${id}">×</button>
         </td>
     `;
@@ -161,14 +114,10 @@ function addProcess() {
     });
 
     processBody.appendChild(row);
-
     updateAlgorithm();
 }
 
-
-/* ============================================
-   5. RENUMBER PROCESS IDs
-============================================ */
+/* 5. RENUMBER PROCESS IDs */
 
 function renumberProcesses() {
     const rows = [...processBody.querySelectorAll("tr")];
@@ -178,40 +127,21 @@ function renumberProcesses() {
         const color = COLORS[index % COLORS.length];
 
         row.dataset.id = id;
-
         row.querySelector(".process-name").innerHTML = `
             <span class="process-dot" style="background:${color}"></span>
             ${id}
         `;
 
-        row.querySelector(".arrival").setAttribute(
-            "aria-label",
-            `${id} arrival time`
-        );
-
-        row.querySelector(".burst").setAttribute(
-            "aria-label",
-            `${id} burst time`
-        );
-
-        row.querySelector(".priority").setAttribute(
-            "aria-label",
-            `${id} priority`
-        );
-
-        row.querySelector(".remove-process").setAttribute(
-            "aria-label",
-            `Remove ${id}`
-        );
+        row.querySelector(".arrival").setAttribute("aria-label", `${id} arrival time`);
+        row.querySelector(".burst").setAttribute("aria-label", `${id} burst time`);
+        row.querySelector(".priority").setAttribute("aria-label", `${id} priority`);
+        row.querySelector(".remove-process").setAttribute("aria-label", `Remove ${id}`);
     });
 
     processCount = rows.length;
 }
 
-
-/* ============================================
-   6. SHOW THE CORRECT INPUT FIELDS
-============================================ */
+/* 6. SHOW THE CORRECT INPUT FIELDS */
 
 function updateAlgorithm() {
     const algorithm = algorithmSelect.value;
@@ -237,35 +167,20 @@ function updateAlgorithm() {
     });
 }
 
-
-/* ============================================
-   7. READ PROCESS INPUTS
-============================================ */
+/* 7. READ PROCESS INPUTS */
 
 function readProcesses() {
     const algorithm = algorithmSelect.value;
 
-    return [...processBody.querySelectorAll("tr")].map(row => {
-        const arrivalInput = row.querySelector(".arrival");
-
-        return {
-            id: row.dataset.id,
-
-            arrival: algorithm === "srtf"
-                ? arrivalInput.value.trim()
-                : 0,
-
-            burst: row.querySelector(".burst").value.trim(),
-
-            priority: row.querySelector(".priority").value.trim()
-        };
-    });
+    return [...processBody.querySelectorAll("tr")].map(row => ({
+        id: row.dataset.id,
+        arrival: algorithm === "srtf" ? row.querySelector(".arrival").value.trim() : 0,
+        burst: row.querySelector(".burst").value.trim(),
+        priority: row.querySelector(".priority").value.trim()
+    }));
 }
 
-
-/* ============================================
-   8. VALIDATE INPUTS
-============================================ */
+/* 8. VALIDATE INPUTS */
 
 function validateInputs(rows) {
     const algorithm = algorithmSelect.value;
@@ -276,14 +191,9 @@ function validateInputs(rows) {
     }
 
     for (const process of rows) {
-        if (process.burst === "") {
-            alert(`${process.id} is missing Burst Time.`);
-            return false;
-        }
-
         const burst = Number(process.burst);
 
-        if (!Number.isFinite(burst) || burst <= 0) {
+        if (process.burst === "" || !Number.isFinite(burst) || burst <= 0) {
             alert(`${process.id}: Burst Time must be greater than 0.`);
             return false;
         }
@@ -291,11 +201,7 @@ function validateInputs(rows) {
         if (usesArrivalTime()) {
             const arrival = Number(process.arrival);
 
-            if (
-                process.arrival === "" ||
-                !Number.isFinite(arrival) ||
-                arrival < 0
-            ) {
+            if (process.arrival === "" || !Number.isFinite(arrival) || arrival < 0) {
                 alert(`${process.id}: Arrival Time must be 0 or greater.`);
                 return false;
             }
@@ -304,11 +210,8 @@ function validateInputs(rows) {
         if (algorithm === "priority") {
             const priority = Number(process.priority);
 
-            if (
-                process.priority === "" ||
-                !Number.isFinite(priority) ||
-                !Number.isInteger(priority)
-            ) {
+            if (process.priority === "" || !Number.isFinite(priority) ||
+                !Number.isInteger(priority)) {
                 alert(`${process.id}: Priority must be a whole number.`);
                 return false;
             }
@@ -318,11 +221,8 @@ function validateInputs(rows) {
     if (algorithm === "rr") {
         const quantum = Number(quantumInput.value);
 
-        if (
-            quantumInput.value.trim() === "" ||
-            !Number.isFinite(quantum) ||
-            quantum <= 0
-        ) {
+        if (quantumInput.value.trim() === "" ||
+            !Number.isFinite(quantum) || quantum <= 0) {
             alert("Time Quantum must be greater than 0.");
             return false;
         }
@@ -331,20 +231,14 @@ function validateInputs(rows) {
     return true;
 }
 
-
-/* ============================================
-   9. PREPARE PROCESS OBJECTS
-============================================ */
+/* 9. PREPARE PROCESS OBJECTS */
 
 function prepareProcesses(rows) {
     return rows.map(process => ({
         id: process.id,
         arrival: Number(process.arrival),
         burst: Number(process.burst),
-        priority: process.priority === ""
-            ? 1
-            : Number(process.priority),
-
+        priority: process.priority === "" ? 1 : Number(process.priority),
         remaining: Number(process.burst),
         firstStart: null,
         completion: null,
@@ -354,18 +248,22 @@ function prepareProcesses(rows) {
     }));
 }
 
+/* 10. ADD A GANTT SEGMENT
 
-/* ============================================
-   10. ADD A GANTT SEGMENT
-============================================ */
+   mergeAdjacent defaults to true for algorithms where
+   consecutive execution by the same process is one block.
 
-function addSegment(list, id, start, end) {
+   Round Robin passes false so each quantum turn remains
+   visible, even when the same process runs consecutively.
+*/
+
+function addSegment(list, id, start, end, mergeAdjacent = true) {
     if (end <= start + 1e-9) return;
 
     const last = list[list.length - 1];
 
-    // Combine consecutive segments belonging to the same process.
     if (
+        mergeAdjacent &&
         last &&
         last.id === id &&
         Math.abs(last.end - start) < 1e-9
@@ -376,26 +274,17 @@ function addSegment(list, id, start, end) {
     }
 }
 
-
-/* ============================================
-   11. FCFS
-   Every process arrives at time 0.
-   The original process-table order is followed.
-============================================ */
+/* 11. FCFS */
 
 function scheduleFCFS(ps) {
     const list = [];
     let time = 0;
 
-    const ordered = [...ps].sort(
-        (a, b) => processIndex(a.id) - processIndex(b.id)
-    );
+    const ordered = [...ps].sort((a, b) => processIndex(a.id) - processIndex(b.id));
 
     for (const process of ordered) {
         process.firstStart = time;
-
         addSegment(list, process.id, time, time + process.burst);
-
         time += process.burst;
         process.remaining = 0;
         process.completion = time;
@@ -404,28 +293,19 @@ function scheduleFCFS(ps) {
     return list;
 }
 
-
-/* ============================================
-   12. SJF — NONPREEMPTIVE
-   The shortest burst executes first.
-   Process-table order breaks ties.
-============================================ */
+/* 12. SJF — NONPREEMPTIVE */
 
 function scheduleSJF(ps) {
     const list = [];
     let time = 0;
 
     const ordered = [...ps].sort(
-        (a, b) =>
-            a.burst - b.burst ||
-            processIndex(a.id) - processIndex(b.id)
+        (a, b) => a.burst - b.burst || processIndex(a.id) - processIndex(b.id)
     );
 
     for (const process of ordered) {
         process.firstStart = time;
-
         addSegment(list, process.id, time, time + process.burst);
-
         time += process.burst;
         process.remaining = 0;
         process.completion = time;
@@ -434,28 +314,19 @@ function scheduleSJF(ps) {
     return list;
 }
 
-
-/* ============================================
-   13. PRIORITY — NONPREEMPTIVE
-   A smaller number means a higher priority.
-   Every process arrives at time 0.
-============================================ */
+/* 13. PRIORITY — NONPREEMPTIVE */
 
 function schedulePriority(ps) {
     const list = [];
     let time = 0;
 
     const ordered = [...ps].sort(
-        (a, b) =>
-            a.priority - b.priority ||
-            processIndex(a.id) - processIndex(b.id)
+        (a, b) => a.priority - b.priority || processIndex(a.id) - processIndex(b.id)
     );
 
     for (const process of ordered) {
         process.firstStart = time;
-
         addSegment(list, process.id, time, time + process.burst);
-
         time += process.burst;
         process.remaining = 0;
         process.completion = time;
@@ -464,32 +335,19 @@ function schedulePriority(ps) {
     return list;
 }
 
-
-/* ============================================
-   14. SRTF — PREEMPTIVE
-   The process with the shortest remaining time
-   executes. A newly arrived shorter process can
-   interrupt the current process.
-============================================ */
+/* 14. SRTF — PREEMPTIVE */
 
 function scheduleSRTF(ps) {
     const list = [];
-
     let time = 0;
     let done = 0;
 
     while (done < ps.length) {
-        const ready = ps.filter(
-            process =>
-                process.remaining > 1e-9 &&
-                process.arrival <= time
-        );
+        const ready = ps.filter(p => p.remaining > 1e-9 && p.arrival <= time);
 
         if (ready.length === 0) {
             const nextArrival = Math.min(
-                ...ps
-                    .filter(process => process.remaining > 1e-9)
-                    .map(process => process.arrival)
+                ...ps.filter(p => p.remaining > 1e-9).map(p => p.arrival)
             );
 
             if (!Number.isFinite(nextArrival)) break;
@@ -499,43 +357,24 @@ function scheduleSRTF(ps) {
             continue;
         }
 
-        ready.sort(
-            (a, b) =>
-                a.remaining - b.remaining ||
-                a.arrival - b.arrival ||
-                processIndex(a.id) - processIndex(b.id)
+        ready.sort((a, b) =>
+            a.remaining - b.remaining ||
+            a.arrival - b.arrival ||
+            processIndex(a.id) - processIndex(b.id)
         );
 
         const process = ready[0];
 
-        if (process.firstStart === null) {
-            process.firstStart = time;
-        }
+        if (process.firstStart === null) process.firstStart = time;
 
         const futureArrivals = ps
-            .filter(
-                item =>
-                    item.remaining > 1e-9 &&
-                    item.arrival > time
-            )
-            .map(item => item.arrival);
+            .filter(p => p.remaining > 1e-9 && p.arrival > time)
+            .map(p => p.arrival);
 
-        const nextArrival = futureArrivals.length
-            ? Math.min(...futureArrivals)
-            : Infinity;
+        const nextArrival = futureArrivals.length ? Math.min(...futureArrivals) : Infinity;
+        const runFor = Math.min(process.remaining, nextArrival - time);
 
-        const runFor = Math.min(
-            process.remaining,
-            nextArrival - time
-        );
-
-        addSegment(
-            list,
-            process.id,
-            time,
-            time + runFor
-        );
-
+        addSegment(list, process.id, time, time + runFor);
         time += runFor;
         process.remaining -= runFor;
 
@@ -549,40 +388,30 @@ function scheduleSRTF(ps) {
     return list;
 }
 
+/* 15. ROUND ROBIN
 
-/* ============================================
-   15. ROUND ROBIN
-   Every process arrives at time 0.
-   Each turn receives up to one time quantum.
-============================================ */
+   Each quantum turn is kept as a separate Gantt segment.
+   This preserves boundaries such as 83, 91, 99, and 107.
+*/
 
 function scheduleRR(ps, quantum) {
     const list = [];
 
-    const queue = [...ps].sort(
-        (a, b) => processIndex(a.id) - processIndex(b.id)
-    );
+    const queue = [...ps].sort((a, b) => processIndex(a.id) - processIndex(b.id));
 
     let time = 0;
     let done = 0;
 
     while (done < ps.length) {
         const process = queue.shift();
-
         if (!process) break;
 
-        if (process.firstStart === null) {
-            process.firstStart = time;
-        }
+        if (process.firstStart === null) process.firstStart = time;
 
         const runFor = Math.min(quantum, process.remaining);
 
-        addSegment(
-            list,
-            process.id,
-            time,
-            time + runFor
-        );
+        // IMPORTANT: false prevents consecutive RR turns from merging.
+        addSegment(list, process.id, time, time + runFor, false);
 
         time += runFor;
         process.remaining -= runFor;
@@ -599,18 +428,13 @@ function scheduleRR(ps, quantum) {
     return list;
 }
 
-
-/* ============================================
-   16. CALCULATE AND DISPLAY RESULTS
-============================================ */
+/* 16. CALCULATE AND DISPLAY RESULTS */
 
 function calculateSchedule() {
     const rows = readProcesses();
-
     if (!validateInputs(rows)) return;
 
     stopAnimation();
-
     processData = prepareProcesses(rows);
 
     const algorithm = algorithmSelect.value;
@@ -624,22 +448,13 @@ function calculateSchedule() {
     } else if (algorithm === "priority") {
         schedule = schedulePriority(processData);
     } else {
-        schedule = scheduleRR(
-            processData,
-            Number(quantumInput.value)
-        );
+        schedule = scheduleRR(processData, Number(quantumInput.value));
     }
 
-    // Calculate the standard scheduling metrics.
     processData.forEach(process => {
-        process.turnaround =
-            process.completion - process.arrival;
-
-        process.waiting =
-            process.turnaround - process.burst;
-
-        process.response =
-            process.firstStart - process.arrival;
+        process.turnaround = process.completion - process.arrival;
+        process.waiting = process.turnaround - process.burst;
+        process.response = process.firstStart - process.arrival;
     });
 
     emptyState.hidden = true;
@@ -650,7 +465,6 @@ function calculateSchedule() {
     renderGantt();
     renderTubes();
     renderDetails();
-
     updateAlgorithm();
 
     simTime = 0;
@@ -660,18 +474,20 @@ function calculateSchedule() {
     pauseButton.disabled = true;
 }
 
-
-/* ============================================
-   17. DRAW THE GANTT CHART
-   Segment widths and time labels use the same
-   proportional timeline.
-============================================ */
+/* 17. DRAW THE GANTT CHART */
 
 function renderGantt() {
-    ganttChart.innerHTML = "";
-    ganttTicks.innerHTML = "";
+    ganttChart.replaceChildren();
+    ganttTicks.replaceChildren();
 
-    if (schedule.length === 0) return;
+    ganttChart.style.width = "";
+    ganttChart.style.minWidth = "";
+    ganttTicks.style.width = "";
+    ganttTicks.style.minWidth = "";
+    ganttTicks.style.marginLeft = "0";
+
+    const timeline = ganttChart.closest(".gantt-timeline");
+    if (!schedule.length) return;
 
     const chartStart = schedule[0].start;
     const chartEnd = schedule[schedule.length - 1].end;
@@ -679,92 +495,114 @@ function renderGantt() {
 
     if (totalDuration <= 0) return;
 
-    // Draw proportional segments.
-    schedule.forEach(segment => {
-        const block = document.createElement("div");
-        const duration = segment.end - segment.start;
+    // Visual settings only; these do not change scheduling calculations.
+    const MIN_SEGMENT_WIDTH = 64;
+    const MIN_PIXELS_PER_UNIT = 24;
 
-        block.className =
-            "gantt-segment" +
+    const availableWidth = timeline
+        ? timeline.clientWidth
+        : ganttChart.parentElement.clientWidth;
+
+    const pixelsPerUnit = Math.max(
+        MIN_PIXELS_PER_UNIT,
+        availableWidth / totalDuration
+    );
+
+    const segmentWidths = schedule.map(segment =>
+        Math.max(
+            MIN_SEGMENT_WIDTH,
+            (segment.end - segment.start) * pixelsPerUnit
+        )
+    );
+
+    const totalChartWidth = segmentWidths.reduce((sum, width) => sum + width, 0);
+
+    const chartStyle = getComputedStyle(ganttChart);
+    const borderLeft = parseFloat(chartStyle.borderLeftWidth) || 0;
+    const borderRight = parseFloat(chartStyle.borderRightWidth) || 0;
+
+    ganttChart.style.boxSizing = "border-box";
+    ganttChart.style.width = `${totalChartWidth + borderLeft + borderRight}px`;
+    ganttChart.style.minWidth = `${totalChartWidth + borderLeft + borderRight}px`;
+
+    ganttTicks.style.position = "relative";
+    ganttTicks.style.boxSizing = "border-box";
+    ganttTicks.style.width = `${totalChartWidth}px`;
+    ganttTicks.style.minWidth = `${totalChartWidth}px`;
+    ganttTicks.style.marginLeft = `${borderLeft}px`;
+    ganttTicks.style.overflow = "visible";
+
+    schedule.forEach((segment, index) => {
+        const width = segmentWidths[index];
+        const block = document.createElement("div");
+
+        block.className = "gantt-segment" +
             (segment.id === "Idle" ? " idle" : "");
 
-        block.style.setProperty("--duration", duration);
+        block.style.flex = `0 0 ${width}px`;
+        block.style.width = `${width}px`;
+        block.style.minWidth = `${width}px`;
+        block.style.maxWidth = `${width}px`;
+        block.style.boxSizing = "border-box";
 
         if (segment.id !== "Idle") {
             block.style.background = processColor(segment.id);
         }
 
         block.textContent = segment.id;
-
-        block.title =
-            `${segment.id}: ${fmt(segment.start)} to ${fmt(segment.end)}`;
-
+        block.title = `${segment.id}: ${fmt(segment.start)} to ${fmt(segment.end)}`;
         ganttChart.appendChild(block);
     });
 
-    /*
-       Use the chart's inner content width as the reference.
-       This is the same width that the flex segments occupy.
-    */
-    const chartInnerWidth = () => {
-        const styles = getComputedStyle(ganttChart);
+    // Add the first start time and every segment end time.
+    const boundaries = [{
+        time: schedule[0].start,
+        position: 0
+    }];
 
-        return ganttChart.clientWidth -
-            parseFloat(styles.borderLeftWidth) -
-            parseFloat(styles.borderRightWidth);
-    };
+    let position = 0;
 
-    const points = [
-        chartStart,
-        ...schedule.map(segment => segment.end)
-    ];
+    schedule.forEach((segment, index) => {
+        position += segmentWidths[index];
 
-    // Keep only unique times in timeline order.
-    const uniquePoints = [...new Set(points)];
+        boundaries.push({
+            time: segment.end,
+            position
+        });
+    });
 
-    uniquePoints.forEach((value, index) => {
+    boundaries.forEach((boundary, index) => {
         const tick = document.createElement("span");
 
-        tick.textContent = fmt(value);
-
-        const percentage =
-            ((value - chartStart) / totalDuration) * 100;
-
-        tick.style.left = `${percentage}%`;
+        tick.textContent = fmt(boundary.time);
+        tick.style.left = `${boundary.position}px`;
+        tick.style.whiteSpace = "nowrap";
+        tick.style.position = "absolute";
+        tick.style.display = "block";
+        tick.style.zIndex = "5";
 
         if (index === 0) {
             tick.className = "tick-start";
-        } else if (index === uniquePoints.length - 1) {
+            tick.style.transform = "translateX(0)";
+        } else if (index === boundaries.length - 1) {
             tick.className = "tick-end";
+            tick.style.transform = "translateX(-100%)";
         } else {
             tick.className = "tick-middle";
+            tick.style.transform = "translateX(-50%)";
         }
 
         ganttTicks.appendChild(tick);
     });
 
-    /*
-       The tick row and the chart must share the same
-       inner width. Match the tick row to the chart's
-       inner width, excluding its left and right borders.
-    */
-    function alignGanttTicks() {
-        const innerWidth = chartInnerWidth();
-
-        ganttTicks.style.width = `${innerWidth}px`;
-        ganttTicks.style.marginLeft =
-            `${parseFloat(getComputedStyle(ganttChart).borderLeftWidth)}px`;
-        ganttTicks.style.marginRight = "0";
+    if (timeline) {
+        timeline.style.overflowX = "auto";
+        timeline.style.overflowY = "hidden";
+        timeline.scrollLeft = 0;
     }
-
-    alignGanttTicks();
 }
 
-
-/* ============================================
-   18. CREATE THE PROCESS ANIMATION
-   One progress bar and moving cannon per process.
-============================================ */
+/* 18. CREATE THE PROCESS ANIMATION */
 
 function renderTubes() {
     tubes.innerHTML = "";
@@ -777,38 +615,23 @@ function renderTubes() {
 
         item.innerHTML = `
             <div class="tube-label">${process.id}</div>
-
             <div class="cannon-bar">
-
                 <div class="process-bar">
-                    <div
-                        class="process-fill"
-                        id="fill-${process.id}"
+                    <div class="process-fill" id="fill-${process.id}"
                         style="background:linear-gradient(90deg, ${color}, #b18aff);">
                     </div>
                 </div>
-
-                <div
-                    class="cannon"
-                    id="cannon-${process.id}"
-                    aria-hidden="true">
-
+                <div class="cannon" id="cannon-${process.id}" aria-hidden="true">
                     <div class="cannon-glow"></div>
                     <div class="cannon-body"></div>
-
                     <div class="cannon-particles">
                         <span class="particle"></span>
                         <span class="particle"></span>
                         <span class="particle"></span>
                     </div>
                 </div>
-
             </div>
-
-            <div
-                class="tube-percent"
-                id="percent-${process.id}">
-
+            <div class="tube-percent" id="percent-${process.id}">
                 <strong>0%</strong>
                 <span>0 / ${fmt(process.burst)}</span>
             </div>
@@ -818,25 +641,14 @@ function renderTubes() {
     });
 }
 
-
-/* ============================================
-   19. UPDATE PROCESS PROGRESS
-   The bar fills according to the CPU time received.
-   The cannon moves along the bar as it fills.
-============================================ */
+/* 19. UPDATE PROCESS PROGRESS */
 
 function updateAnimation(time) {
-    const end = schedule.length
-        ? schedule[schedule.length - 1].end
-        : 0;
-
+    const end = schedule.length ? schedule[schedule.length - 1].end : 0;
     simTime = Math.max(0, Math.min(time, end));
 
     const progress = {};
-
-    processData.forEach(process => {
-        progress[process.id] = 0;
-    });
+    processData.forEach(process => progress[process.id] = 0);
 
     let active = null;
 
@@ -848,52 +660,31 @@ function updateAnimation(time) {
             Math.min(simTime, segment.end) - segment.start
         );
 
-        if (amount > 0) {
-            progress[segment.id] += amount;
-        }
+        if (amount > 0) progress[segment.id] += amount;
 
-        if (
-            simTime >= segment.start &&
-            simTime < segment.end
-        ) {
+        if (simTime >= segment.start && simTime < segment.end) {
             active = segment.id;
         }
     }
 
     processData.forEach(process => {
-        const completed = Math.min(
-            process.burst,
-            progress[process.id]
-        );
-
-        const percent = process.burst > 0
-            ? (completed / process.burst) * 100
-            : 0;
+        const completed = Math.min(process.burst, progress[process.id]);
+        const percent = process.burst > 0 ? completed / process.burst * 100 : 0;
 
         const fill = document.getElementById(`fill-${process.id}`);
         const cannon = document.getElementById(`cannon-${process.id}`);
         const label = document.getElementById(`percent-${process.id}`);
 
-        if (fill) {
-            fill.style.width = `${percent}%`;
-        }
+        if (fill) fill.style.width = `${percent}%`;
 
         if (cannon) {
-            /*
-               Keep the cannon inside the bar.
-               At 100%, the cannon reaches the far end.
-            */
             const bar = cannon.parentElement.querySelector(".process-bar");
             const barWidth = bar ? bar.clientWidth : 0;
             const cannonWidth = cannon.offsetWidth;
             const travelDistance = Math.max(0, barWidth - cannonWidth);
 
-            cannon.style.left = `${(percent / 100) * travelDistance}px`;
-
-            cannon.classList.toggle(
-                "firing",
-                active === process.id && running
-            );
+            cannon.style.left = `${percent / 100 * travelDistance}px`;
+            cannon.classList.toggle("firing", active === process.id && running);
         }
 
         if (label) {
@@ -904,36 +695,22 @@ function updateAnimation(time) {
         }
     });
 
-    clock.textContent =
-        `Time: ${fmt(simTime)}` +
+    clock.textContent = `Time: ${fmt(simTime)}` +
         (active ? ` · Running: ${active}` : "");
 }
 
-
-/* ============================================
-   20. ANIMATION FRAME
-   Real elapsed time is converted into simulation time.
-============================================ */
+/* 20. ANIMATION FRAME */
 
 function animationFrame(timestamp) {
     if (!running) return;
 
-    if (lastFrame === null) {
-        lastFrame = timestamp;
-    }
+    if (lastFrame === null) lastFrame = timestamp;
 
     const delta = timestamp - lastFrame;
     lastFrame = timestamp;
 
-    /*
-       The speed values represent milliseconds per
-       simulated time unit. Lower values run faster.
-    */
     const simulatedDelta = delta / Number(speedSelect.value);
-
-    const end = schedule.length
-        ? schedule[schedule.length - 1].end
-        : 0;
+    const end = schedule.length ? schedule[schedule.length - 1].end : 0;
 
     updateAnimation(simTime + simulatedDelta);
 
@@ -943,7 +720,6 @@ function animationFrame(timestamp) {
         lastFrame = null;
 
         updateAnimation(end);
-
         playButton.disabled = true;
         pauseButton.disabled = true;
         return;
@@ -952,20 +728,13 @@ function animationFrame(timestamp) {
     animationId = requestAnimationFrame(animationFrame);
 }
 
-
-/* ============================================
-   21. PLAY
-============================================ */
+/* 21. PLAY */
 
 function playAnimation() {
     if (!schedule.length || running) return;
 
     const end = schedule[schedule.length - 1].end;
-
-    // Replay from the beginning if the animation has finished.
-    if (simTime >= end) {
-        updateAnimation(0);
-    }
+    if (simTime >= end) updateAnimation(0);
 
     running = true;
     lastFrame = null;
@@ -974,21 +743,15 @@ function playAnimation() {
     pauseButton.disabled = false;
 
     updateAnimation(simTime);
-
     animationId = requestAnimationFrame(animationFrame);
 }
 
-
-/* ============================================
-   22. PAUSE
-============================================ */
+/* 22. PAUSE */
 
 function stopAnimation() {
     running = false;
 
-    if (animationId !== null) {
-        cancelAnimationFrame(animationId);
-    }
+    if (animationId !== null) cancelAnimationFrame(animationId);
 
     animationId = null;
     lastFrame = null;
@@ -996,16 +759,12 @@ function stopAnimation() {
     playButton.disabled = false;
     pauseButton.disabled = true;
 
-    // Remove the firing effect while paused.
     tubes.querySelectorAll(".cannon").forEach(cannon => {
         cannon.classList.remove("firing");
     });
 }
 
-
-/* ============================================
-   23. RESTART
-============================================ */
+/* 23. RESTART */
 
 function restartAnimation() {
     stopAnimation();
@@ -1015,10 +774,7 @@ function restartAnimation() {
     pauseButton.disabled = true;
 }
 
-
-/* ============================================
-   24. RENDER SCHEDULING DETAILS
-============================================ */
+/* 24. RENDER SCHEDULING DETAILS */
 
 function renderDetails() {
     detailsBody.innerHTML = "";
@@ -1030,17 +786,13 @@ function renderDetails() {
 
         row.innerHTML = `
             <td>
-                <span
-                    class="process-dot"
-                    style="background:${processColor(process.id)}">
-                </span>
+                <span class="process-dot"
+                    style="background:${processColor(process.id)}"></span>
                 ${process.id}
             </td>
-
             <td class="arrival-result" ${showArrival ? "" : "hidden"}>
                 ${fmt(process.arrival)}
             </td>
-
             <td>${fmt(process.burst)}</td>
             <td>${fmt(process.completion)}</td>
             <td>${fmt(process.turnaround)}</td>
@@ -1054,35 +806,18 @@ function renderDetails() {
     const average = key => {
         if (processData.length === 0) return 0;
 
-        return processData.reduce(
-            (sum, process) => sum + process[key],
-            0
-        ) / processData.length;
+        return processData.reduce((sum, process) => sum + process[key], 0) /
+            processData.length;
     };
 
     averages.innerHTML = `
-        <span>
-            Average Turnaround:
-            <strong>${fmt(average("turnaround"))}</strong>
-        </span>
-
-        <span>
-            Average Waiting:
-            <strong>${fmt(average("waiting"))}</strong>
-        </span>
-
-        <span>
-            Average Response:
-            <strong>${fmt(average("response"))}</strong>
-        </span>
+        <span>Average Turnaround: <strong>${fmt(average("turnaround"))}</strong></span>
+        <span>Average Waiting: <strong>${fmt(average("waiting"))}</strong></span>
+        <span>Average Response: <strong>${fmt(average("response"))}</strong></span>
     `;
 }
 
-
-/* ============================================
-   25. CLEAR RESULTS
-   Called when inputs or the algorithm change.
-============================================ */
+/* 25. CLEAR RESULTS */
 
 function clearResults() {
     stopAnimation();
@@ -1098,7 +833,15 @@ function clearResults() {
 
     ganttChart.innerHTML = "";
     ganttTicks.innerHTML = "";
-    ganttTicks.removeAttribute("style");
+
+    ganttChart.style.width = "";
+    ganttChart.style.minWidth = "";
+    ganttTicks.style.width = "";
+    ganttTicks.style.minWidth = "";
+    ganttTicks.style.marginLeft = "0";
+
+    const timeline = ganttChart.closest(".gantt-timeline");
+    if (timeline) timeline.scrollLeft = 0;
 
     tubes.innerHTML = "";
     detailsBody.innerHTML = "";
@@ -1107,10 +850,7 @@ function clearResults() {
     clock.textContent = "Time: 0";
 }
 
-
-/* ============================================
-   26. RESET EVERYTHING
-============================================ */
+/* 26. RESET EVERYTHING */
 
 function resetAll() {
     stopAnimation();
@@ -1128,10 +868,7 @@ function resetAll() {
     updateAlgorithm();
 }
 
-
-/* ============================================
-   27. CONNECT BUTTONS AND EVENTS
-============================================ */
+/* 27. CONNECT BUTTONS AND EVENTS */
 
 addButton.addEventListener("click", () => {
     addProcess();
@@ -1149,13 +886,8 @@ playButton.addEventListener("click", playAnimation);
 pauseButton.addEventListener("click", stopAnimation);
 restartButton.addEventListener("click", restartAnimation);
 
-
-/* ============================================
-   28. INITIAL SETUP
-   Begin with two processes and empty results.
-============================================ */
+/* 28. INITIAL SETUP */
 
 addProcess();
 addProcess();
-
 updateAlgorithm();
